@@ -1,0 +1,14 @@
+node_modules/
+.env
+.env.local
+.next/
+dist/
+build/
+.cache/
+*.pyc
+__pycache__/
+.DS_Store
+.turbo/
+.vercel/
+.output/
+
