@@ -9,6 +9,9 @@ export default defineConfig({
   site: 'https://metxt.org',
   adapter: vercel(),
   integrations: [sitemap()],
+  security: {
+    checkOrigin: false
+  },
   vite: {
     plugins: [tailwindcss()]
   }
