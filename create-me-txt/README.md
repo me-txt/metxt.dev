@@ -1,6 +1,6 @@
 # create-me-txt
 
-CLI tool to generate, validate, and fetch [me.txt](https://metxt.org) files — the open standard for personal AI-readable identity.
+CLI tool to generate, validate, and fetch [me.txt](https://metxt.org) files. The open standard for personal AI-readable identity.
 
 ## Quick Start
 

@@ -1,6 +1,6 @@
 # me.txt
 
-An open standard for personal identity files in the AI age. A simple markdown file at your site root that tells AI who you are — self-authored, human-readable, AI-native.
+An open standard for personal identity files in the AI age. A simple markdown file at your site root that tells AI who you are. Self-authored, human-readable, AI-native.
 
 **Website:** [metxt.org](https://metxt.org)
 

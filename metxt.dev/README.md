@@ -1,6 +1,6 @@
 # metxt.org
 
-The website, spec, directory, and API for [me.txt](https://metxt.org) — the open standard for personal AI-readable identity files.
+The website, spec, directory, and API for [me.txt](https://metxt.org). The open standard for personal AI-readable identity files.
 
 ## Stack
 
@@ -37,7 +37,7 @@ pnpm install
 pnpm dev
 ```
 
-The dev server uses a local SQLite file (`local.db`) — no Turso setup needed.
+The dev server uses a local SQLite file (`local.db`). No Turso setup needed.
 
 ## Environment variables
 
