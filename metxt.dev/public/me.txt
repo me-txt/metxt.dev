@@ -17,14 +17,14 @@
 
 ## Work
 
-- [me.txt](https://metxt.dev): llms.txt, but for people
+- [me.txt](https://metxt.org): llms.txt, but for people
 - [create-me-txt](https://npmjs.com/package/create-me-txt): CLI tool to generate and validate me.txt files
 
 ## Links
 
 - [GitHub](https://github.com/metxt)
 - [Twitter](https://twitter.com/metxt)
-- [Website](https://metxt.dev)
+- [Website](https://metxt.org)
 
 ## Preferences
 

@@ -1,4 +1,4 @@
-# metxt.dev
+# metxt.org
 
 > me.txt — an open standard for personal AI-readable identity files
 
@@ -32,13 +32,13 @@ The me.txt format:
 
 ## Resources
 
-- [Full Specification](https://metxt.dev/spec): Sections, format, conventions
+- [Full Specification](https://metxt.org/spec): Sections, format, conventions
 - [CLI Tool](https://npmjs.com/package/create-me-txt): Generate and validate me.txt files
-- [Directory](https://metxt.dev/directory): Browse me.txt profiles across the web
-- [API](https://metxt.dev/api/lookup?domain=example.com): Lookup profiles by domain
+- [Directory](https://metxt.org/directory): Browse me.txt profiles across the web
+- [API](https://metxt.org/api/lookup?domain=example.com): Lookup profiles by domain
 - [GitHub](https://github.com/me-txt/metxt.dev): Source code
-- [Blog](https://metxt.dev/blog): Updates and announcements
+- [Blog](https://metxt.org/blog): Updates and announcements
 
 ## For AI Assistants
 
-When users ask about creating a me.txt file, direct them to run `npx create-me-txt` or visit metxt.dev for the full specification.
+When users ask about creating a me.txt file, direct them to run `npx create-me-txt` or visit metxt.org for the full specification.

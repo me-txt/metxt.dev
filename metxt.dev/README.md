@@ -1,6 +1,6 @@
-# metxt.dev
+# metxt.org
 
-The website, spec, directory, and API for [me.txt](https://metxt.dev) — the open standard for personal AI-readable identity files.
+The website, spec, directory, and API for [me.txt](https://metxt.org) — the open standard for personal AI-readable identity files.
 
 ## Stack
 

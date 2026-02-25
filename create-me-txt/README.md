@@ -1,6 +1,6 @@
 # create-me-txt
 
-CLI tool to generate, validate, and fetch [me.txt](https://metxt.dev) files — the open standard for personal AI-readable identity.
+CLI tool to generate, validate, and fetch [me.txt](https://metxt.org) files — the open standard for personal AI-readable identity.
 
 ## Quick Start
 
@@ -10,7 +10,7 @@ npx create-me-txt
 
 **Not a developer?** Tell your AI agent:
 
-> Create a me.txt file for me following the spec at metxt.dev/spec. Place it at my site root (/me.txt). Keep it concise.
+> Create a me.txt file for me following the spec at metxt.org/spec. Place it at my site root (/me.txt). Keep it concise.
 
 ## Installation
 
@@ -87,7 +87,7 @@ me-txt fetch example.com
 The fetch command tries these URLs in order:
 1. `https://example.com/me.txt`
 2. `https://example.com/.well-known/me.txt`
-3. `https://metxt.dev/api/lookup` (directory fallback)
+3. `https://metxt.org/api/lookup` (directory fallback)
 
 Print full contents:
 

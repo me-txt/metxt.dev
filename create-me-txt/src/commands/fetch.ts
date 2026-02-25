@@ -52,12 +52,12 @@ export async function fetchMeTxt(urlOrDomain: string, options: FetchOptions): Pr
     if (result) break
   }
 
-  // Fallback: try the metxt.dev directory API
+  // Fallback: try the metxt.org directory API
   if (!result) {
     let domain = urlOrDomain.replace(/^https?:\/\//, '').replace(/\/.*$/, '')
-    console.log(pc.dim(`  Trying metxt.dev directory for ${domain}...`))
+    console.log(pc.dim(`  Trying metxt.org directory for ${domain}...`))
     try {
-      const apiResp = await fetch(`https://metxt.dev/api/lookup?domain=${encodeURIComponent(domain)}`, {
+      const apiResp = await fetch(`https://metxt.org/api/lookup?domain=${encodeURIComponent(domain)}`, {
         headers: { 'User-Agent': 'create-me-txt', 'Accept': 'application/json' }
       })
       if (apiResp.ok) {
@@ -77,7 +77,7 @@ export async function fetchMeTxt(urlOrDomain: string, options: FetchOptions): Pr
     for (const url of urls) {
       console.error(pc.dim(`    - ${url}`))
     }
-    console.error(pc.dim('    - metxt.dev directory'))
+    console.error(pc.dim('    - metxt.org directory'))
     process.exit(1)
   }
 
