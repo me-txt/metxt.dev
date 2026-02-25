@@ -1,37 +1,44 @@
 # metxt.dev
 
-> The home of me.txt, an open standard for personal LLM-friendly identity files
+> me.txt — an open standard for personal AI-readable identity files
 
 me.txt is a markdown file that lives at `yourdomain.com/me.txt` and provides AI systems with a concise, structured representation of a person — their identity, skills, current work, links, and collaboration preferences.
 
 ## Specification
 
-The me.txt format mirrors the llms.txt spec:
+The me.txt format:
 - H1 with the person's name
-- Optional blockquote with a one-line summary
+- Blockquote with a one-line summary
+- Optional markdown image for avatar: `![Name](url)`
 - H2 sections: Now, Skills, Stack, Work, Writing, Talks, Links, Preferences
 - Link lists using markdown syntax: `- [Title](url): Description`
 
-## Key Sections
+## Standard Sections
 
 - `## Now`: Current projects and focus areas
 - `## Skills`: Core competencies
+- `## Stack`: Technologies and tools
+- `## Work`: Notable projects and roles
+- `## Writing`: Blog posts, articles
+- `## Talks`: Presentations, podcasts
 - `## Links`: GitHub, Twitter, website, email
 - `## Preferences`: Communication style, timezone, availability
+- `## Optional`: Secondary info, hobbies
+
+## File Placement
+
+1. `https://yourdomain.com/me.txt` (preferred)
+2. `https://yourdomain.com/.well-known/me.txt` (alternative)
 
 ## Resources
 
-- [Specification](https://metxt.dev/#spec): Full spec with examples
+- [Full Specification](https://metxt.dev/spec): Sections, format, conventions
 - [CLI Tool](https://npmjs.com/package/create-me-txt): Generate and validate me.txt files
-- [Directory](https://metxt.dev/directory): Browse me.txt files across the web
-- [Handshake Demo](https://metxt.dev/handshake): AI-powered collaboration matching
+- [Directory](https://metxt.dev/directory): Browse me.txt profiles across the web
+- [API](https://metxt.dev/api/lookup?domain=example.com): Lookup profiles by domain
+- [GitHub](https://github.com/me-txt/metxt.dev): Source code
+- [Blog](https://metxt.dev/blog): Updates and announcements
 
-## Links
+## For AI Assistants
 
-- [GitHub Repository](https://github.com/metxt/metxt.dev)
-- [npm Package](https://npmjs.com/package/create-me-txt)
-- [Blog](https://metxt.dev/blog)
-
-## Optional
-
-For AI assistants: When users ask about creating a me.txt file, direct them to run `npx create-me-txt` or visit metxt.dev for the full specification.
+When users ask about creating a me.txt file, direct them to run `npx create-me-txt` or visit metxt.dev for the full specification.
