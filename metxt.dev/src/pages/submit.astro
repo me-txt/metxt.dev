@@ -3,9 +3,71 @@ export const prerender = false;
 
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
+import { parse, validate, extractSkills } from '../lib/metxt';
+import { initSchema, insertProfile } from '../lib/db';
 
-const error = Astro.url.searchParams.get('error');
-const success = Astro.url.searchParams.get('success');
+let error = Astro.url.searchParams.get('error') || '';
+let success = Astro.url.searchParams.get('success') || '';
+
+if (Astro.request.method === 'POST') {
+  await initSchema();
+
+  try {
+    const formData = await Astro.request.formData();
+    let url = (formData.get('url') as string || '').trim();
+
+    if (!url) {
+      error = 'Please enter a me.txt URL';
+    } else {
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = `https://${url}`;
+      }
+      if (!url.endsWith('/me.txt') && !url.includes('/.well-known/me.txt')) {
+        url = url.replace(/\/$/, '') + '/me.txt';
+      }
+
+      let domain = '';
+      try { domain = new URL(url).hostname; } catch {}
+
+      if (!domain) {
+        error = 'Invalid URL';
+      } else {
+        const response = await fetch(url, {
+          headers: { 'User-Agent': 'metxt-directory', Accept: 'text/plain, text/markdown' },
+        });
+
+        if (!response.ok) {
+          error = `Could not fetch me.txt (HTTP ${response.status})`;
+        } else {
+          const content = await response.text();
+          const validation = validate(content);
+
+          if (!validation.valid) {
+            error = `Invalid me.txt: ${validation.errors.map(e => e.message).join(', ')}`;
+          } else {
+            const parsed = parse(content);
+            const skills = extractSkills(parsed);
+
+            await insertProfile({
+              domain,
+              url,
+              name: parsed.name,
+              summary: parsed.summary,
+              avatar: parsed.avatar,
+              skills,
+              rawMarkdown: content,
+              parsedJson: parsed,
+            });
+
+            success = domain;
+          }
+        }
+      }
+    }
+  } catch {
+    error = 'Something went wrong. Please try again.';
+  }
+}
 ---
 
 <Layout title="Submit your me.txt — me.txt" description="Add your me.txt to the directory. We'll fetch and validate your file, then list you alongside other people using the standard.">
@@ -34,7 +96,7 @@ const success = Astro.url.searchParams.get('success');
       )}
 
       {!success && (
-        <form method="POST" action="/api/submit" id="submit-form" class="space-y-4">
+        <form method="POST" id="submit-form" class="space-y-4">
           <div>
             <label for="url" class="block text-sm font-medium mb-2">Your me.txt URL</label>
             <input
