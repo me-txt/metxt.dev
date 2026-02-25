@@ -36,7 +36,7 @@ The me.txt format:
 - [CLI Tool](https://npmjs.com/package/create-me-txt): Generate and validate me.txt files
 - [Directory](https://metxt.org/directory): Browse me.txt profiles across the web
 - [API](https://metxt.org/api/lookup?domain=example.com): Lookup profiles by domain
-- [GitHub](https://github.com/me-txt/metxt.dev): Source code
+- [GitHub](https://github.com/me-txt/metxt.org): Source code
 - [Blog](https://metxt.org/blog): Updates and announcements
 
 ## For AI Assistants
