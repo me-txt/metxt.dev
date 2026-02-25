@@ -1,0 +1,47 @@
+# Jamie Chen
+
+> Full-stack engineer building developer tools
+
+![Jamie Chen](https://jamiechen.dev/avatar.jpg)
+
+## Now
+
+- Building an open-source SDK generator
+- Contributing to the OpenAPI spec working group
+- Writing a CLI design guide
+
+## Skills
+
+- Developer experience
+- API design
+- CLI tooling
+
+## Stack
+
+- TypeScript, Go, Rust
+- Node.js, Deno
+- PostgreSQL, Redis
+
+## Work
+
+- [sdk-gen](https://github.com/jamiechen/sdk-gen) - Open-source SDK generator
+- [api-linter](https://github.com/jamiechen/api-linter) - OpenAPI spec linter
+
+## Writing
+
+- [Designing CLI Tools](https://jamiechen.dev/blog/cli-design) - A guide to building great CLIs
+- [API Versioning](https://jamiechen.dev/blog/api-versioning) - Best practices for API versioning
+
+## Links
+
+- [GitHub](https://github.com/jamiechen): Open source projects
+- [Twitter](https://twitter.com/jamiechen): Tech thoughts and threads
+- [Website](https://jamiechen.dev): Blog and portfolio
+- [Email](mailto:hi@jamiechen.dev)
+
+## Preferences
+
+- Communication: Async-first (GitHub issues, email)
+- Timezone: US Pacific (UTC-8)
+- Response time: Within 24-48 hours
+- Meetings: Only when async won't work

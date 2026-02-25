@@ -1,0 +1,184 @@
+---
+import BlogLayout from '../../layouts/BlogLayout.astro';
+---
+
+<BlogLayout 
+  title="Introducing me.txt" 
+  description="An open standard for personal identity files in the AI age"
+  date="2026-02-24"
+>
+  <p>
+    When you talk to an AI assistant, it knows nothing about you. It can't see your GitHub, 
+    doesn't know what you're working on, and has no idea how you prefer to communicate. 
+    Every conversation starts from zero.
+  </p>
+
+  <p>
+    This is a problem that will only get worse. As AI becomes more integrated into our 
+    workflows—writing emails, scheduling meetings, making introductions—it needs context 
+    about who we are. Right now, that context is scattered across LinkedIn profiles, old 
+    blog posts, GitHub readmes, and whatever fragments the AI can scrape together.
+  </p>
+
+  <p>
+    <strong>There's no single, authoritative, LLM-optimized source of truth for a person.</strong>
+  </p>
+
+  <p>
+    Until now.
+  </p>
+
+  <h2>Meet me.txt</h2>
+
+  <p>
+    <a href="https://metxt.dev">me.txt</a> is an open standard for personal identity files. 
+    It's a simple markdown file that lives at the root of your personal website and tells 
+    AI systems who you are.
+  </p>
+
+  <p>
+    If you're familiar with <a href="https://llmstxt.org">llms.txt</a>—the standard for 
+    making websites AI-friendly—you already understand me.txt. Same format, same simplicity, 
+    different subject: <em>you</em>.
+  </p>
+
+  <pre><code>{`# Jamie Chen
+
+> Full-stack engineer building developer tools
+
+## Now
+
+- Building an open-source SDK generator
+- Contributing to the OpenAPI spec working group
+- Writing a CLI design guide
+
+## Skills
+
+- Developer experience
+- API design
+- CLI tooling
+
+## Links
+
+- [GitHub](https://github.com/jamiechen)
+- [Twitter](https://twitter.com/jamiechen)
+- [Email](mailto:hi@jamiechen.dev)
+
+## Preferences
+
+- Communication: Async-first (GitHub issues, email)
+- Timezone: US Pacific (UTC-8)
+- Response time: Within 24-48 hours
+- Meetings: Only when async won't work`}</code></pre>
+
+  <p>
+    That's it. A markdown file. Human-readable, AI-native, self-authored.
+  </p>
+
+  <h2>The Preferences section</h2>
+
+  <p>
+    What makes me.txt different from a typical bio is the <code>## Preferences</code> section. 
+    This is where you tell AI systems—and humans—<em>how</em> to interact with you:
+  </p>
+
+  <ul>
+    <li>Do you prefer async or sync communication?</li>
+    <li>What timezone are you in?</li>
+    <li>How quickly do you typically respond?</li>
+    <li>What channels do you prefer (email, Slack, GitHub issues)?</li>
+    <li>What kind of outreach are you open to—or not?</li>
+  </ul>
+
+  <p>
+    This is especially powerful for AI-mediated introductions. When two people share their 
+    me.txt files, an AI can instantly understand not just what they do, but how they might 
+    work together effectively.
+  </p>
+
+  <h2>How to create yours</h2>
+
+  <p>
+    The fastest way to create a me.txt is with our CLI tool:
+  </p>
+
+  <pre><code>npx create-me-txt</code></pre>
+
+  <p>
+    This launches an interactive wizard that guides you through each field. When you're done, 
+    it generates a valid me.txt file ready to publish.
+  </p>
+
+  <p>
+    You can also pull data from your GitHub profile:
+  </p>
+
+  <pre><code>npx create-me-txt --github yourusername</code></pre>
+
+  <p>
+    This pre-populates your me.txt with your name, bio, top repos, and social links.
+  </p>
+
+  <h2>Where to put it</h2>
+
+  <p>
+    Place your me.txt at the root of your personal website:
+  </p>
+
+  <pre><code>https://yoursite.com/me.txt</code></pre>
+
+  <p>
+    Or if you prefer:
+  </p>
+
+  <pre><code>https://yoursite.com/.well-known/me.txt</code></pre>
+
+  <p>
+    That's it. No API keys, no sign-ups, no platform lock-in. It's just a file on your domain.
+  </p>
+
+  <h2>What's next</h2>
+
+  <p>
+    We're building out the me.txt ecosystem:
+  </p>
+
+  <ul>
+    <li>
+      <strong>Directory</strong>: A browseable index of me.txt files across the web. 
+      Submit yours at <a href="https://metxt.dev/submit">metxt.dev/submit</a>.
+    </li>
+    <li>
+      <strong>Handshake</strong>: Paste two me.txt URLs and get an AI-generated collaboration 
+      brief—showing how two people might work together based on their skills and preferences.
+    </li>
+    <li>
+      <strong>Integrations</strong>: VS Code/Cursor extensions, email tools, and more—all 
+      using me.txt as the universal context layer.
+    </li>
+  </ul>
+
+  <h2>Join the standard</h2>
+
+  <p>
+    me.txt is an <a href="https://github.com/metxt">open standard</a>, MIT-licensed, and 
+    community-driven. The spec is simple by design—if you can write markdown, you can 
+    create a me.txt.
+  </p>
+
+  <p>
+    <strong>Ready to create yours?</strong>
+  </p>
+
+  <pre><code>npx create-me-txt</code></pre>
+
+  <p>
+    Read the <a href="https://metxt.dev/#spec">full specification</a>, browse the 
+    <a href="https://metxt.dev/directory">directory</a>, or follow 
+    <a href="https://twitter.com/metxt">@metxt</a> for updates.
+  </p>
+
+  <p>
+    The AI age needs a way for people to introduce themselves. That's me.txt.
+  </p>
+</BlogLayout>

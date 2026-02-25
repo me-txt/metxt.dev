@@ -1,0 +1,22 @@
+# Morgan Lee
+
+> DevRel engineer and open source advocate
+
+## Links
+
+- [GitHub](https://github.com/morganlee): Open source contributions
+- [Blog](https://morganlee.dev/blog): Technical writing
+- [Twitter](https://twitter.com/morganlee): Community updates
+- [YouTube](https://youtube.com/@morganlee): Tutorial videos and talks
+- [Email](mailto:hello@morganlee.dev)
+
+## Work
+
+- [devtools-cli](https://github.com/morganlee/devtools-cli) - Developer productivity toolkit
+- [docs-generator](https://github.com/morganlee/docs-generator) - Auto-generate docs from source
+
+## Preferences
+
+- Communication: Mixed (async preferred, sync OK for pairing)
+- Timezone: US Eastern (UTC-5)
+- Response time: Same day for DMs, 48h for email

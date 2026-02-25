@@ -1,14 +1,34 @@
+# dependencies
 node_modules/
-.env
-.env.local
-.next/
-dist/
-build/
-.cache/
-*.pyc
-__pycache__/
-.DS_Store
-.turbo/
-.vercel/
-.output/
 
+# build output
+dist/
+.astro/
+.vercel/
+coverage/
+
+# environment
+.env
+.env.*
+!.env.example
+
+# local database
+*.db
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# plan files (local only)
+metxt-build-plan.md

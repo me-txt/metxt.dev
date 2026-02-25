@@ -1,0 +1,120 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+
+const exampleMeTxt = `# Jamie Chen
+
+> Full-stack engineer building developer tools
+
+## Now
+
+- Building an open-source SDK generator
+- Contributing to the OpenAPI spec working group
+
+## Skills
+
+- Developer experience
+- API design
+- CLI tooling
+
+## Links
+
+- [GitHub](https://github.com/jamiechen)
+- [Twitter](https://twitter.com/jamiechen)
+- [Email](mailto:hi@jamiechen.dev)
+
+## Preferences
+
+- Communication: Async-first (GitHub issues, email)
+- Timezone: US Pacific (UTC-8)`;
+---
+
+<Layout title="me.txt — A personal identity file for the AI age">
+  <Nav />
+
+  <main>
+    <!-- Hero -->
+    <section class="py-24 md:py-32">
+      <div class="container-narrow text-center">
+        <h1 class="text-4xl md:text-5xl font-serif font-medium tracking-tight mb-6">
+          me.txt
+        </h1>
+        <p class="text-lg text-muted mb-8 leading-relaxed max-w-lg mx-auto">
+          A markdown file at your site root that tells AI who you are. 
+          Self-authored, human-readable, AI-native.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center mb-16">
+          <a href="/spec" class="inline-flex items-center justify-center px-5 py-2.5 bg-ink text-paper rounded font-medium text-sm hover:bg-ink/90 transition-colors">
+            Read the spec
+          </a>
+          <a href="#create" class="inline-flex items-center justify-center px-5 py-2.5 border border-border rounded font-medium text-sm hover:bg-code-bg transition-colors">
+            Create yours
+          </a>
+        </div>
+        
+        <!-- Example -->
+        <div class="code-block text-left max-w-lg mx-auto">
+          <div class="code-block-header flex items-center justify-between">
+            <span>me.txt</span>
+            <span class="text-xs">yoursite.com/me.txt</span>
+          </div>
+          <pre class="code-block-content text-xs leading-relaxed">{exampleMeTxt}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Create Yours -->
+    <section id="create" class="py-16 border-t border-border">
+      <div class="container-narrow text-center">
+        <h2 class="text-xl font-serif font-medium mb-6">Create yours</h2>
+        <p class="text-muted mb-6">
+          Generate your me.txt with a single command.
+        </p>
+        
+        <div class="code-block text-left max-w-sm mx-auto mb-4">
+          <div class="code-block-header flex items-center justify-between">
+            <span>Terminal</span>
+            <button 
+              class="text-xs text-muted hover:text-ink transition-colors copy-btn"
+              data-copy="npx create-me-txt"
+            >
+              Copy
+            </button>
+          </div>
+          <pre class="code-block-content"><span class="text-muted">$</span> npx create-me-txt</pre>
+        </div>
+        
+        <p class="text-sm text-muted">
+          Or pull from GitHub: <code class="bg-code-bg px-1.5 py-0.5 rounded text-xs font-mono">npx create-me-txt --github username</code>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-border py-8">
+    <div class="container-narrow text-center text-sm text-muted">
+      <p>
+        <a href="https://github.com/metxt" class="hover:text-ink">GitHub</a>
+        <span class="mx-2">·</span>
+        <span>Spec v0.1</span>
+        <span class="mx-2">·</span>
+        <span>MIT License</span>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.getAttribute('data-copy');
+        if (text) {
+          navigator.clipboard.writeText(text);
+          const original = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(() => btn.textContent = original, 1500);
+        }
+      });
+    });
+  </script>
+</Layout>

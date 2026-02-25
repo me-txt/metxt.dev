@@ -1,0 +1,9 @@
+# Alex Rivera
+
+> Frontend developer focused on design systems
+
+## Skills
+
+- React
+- CSS
+- Figma

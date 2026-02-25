@@ -1,0 +1,163 @@
+---
+export const prerender = false;
+
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { initSchema, listProfiles } from '../../lib/db';
+
+await initSchema();
+
+const query = Astro.url.searchParams.get('q') || '';
+const sort = (Astro.url.searchParams.get('sort') || 'newest') as 'newest' | 'updated' | 'alpha';
+const page = Math.max(1, parseInt(Astro.url.searchParams.get('page') || '1', 10));
+
+const result = await listProfiles({ query: query || undefined, sort, page });
+
+function formatDate(dateStr: string | null): string {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function skillsFromJson(json: string | null): string[] {
+  try { return JSON.parse(json || '[]'); } catch { return []; }
+}
+---
+
+<Layout title="Directory — me.txt" description="Browse people using me.txt — the open standard for personal AI-readable identity.">
+  <Nav />
+
+  <main class="py-16">
+    <div class="container-wide">
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+        <div>
+          <h1 class="text-3xl font-serif font-medium tracking-tight">Directory</h1>
+          <p class="text-muted text-sm mt-1">{result.total} {result.total === 1 ? 'person' : 'people'} using me.txt</p>
+        </div>
+        <a href="/submit" class="inline-flex items-center justify-center px-4 py-2 bg-ink text-paper rounded-lg font-medium text-sm hover:bg-ink/90 transition-colors whitespace-nowrap">
+          Submit yours
+        </a>
+      </div>
+
+      <!-- Search + Sort -->
+      <form method="GET" class="flex flex-col sm:flex-row gap-3 mb-8">
+        <input
+          type="text"
+          name="q"
+          value={query}
+          placeholder="Search by name or skill..."
+          class="flex-1 px-4 py-2 border border-border rounded-lg bg-paper text-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent placeholder:text-muted/50"
+        />
+        <select
+          name="sort"
+          class="px-4 pr-8 py-2 border border-border rounded-lg bg-paper text-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2378716c%22%20stroke-width%3D%222%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_8px_center] bg-no-repeat"
+        >
+          <option value="newest" selected={sort === 'newest'}>Newest</option>
+          <option value="updated" selected={sort === 'updated'}>Recently updated</option>
+          <option value="alpha" selected={sort === 'alpha'}>A &ndash; Z</option>
+        </select>
+        <button
+          type="submit"
+          class="px-4 py-2 border border-border rounded-lg text-sm font-medium hover:bg-code-bg transition-colors"
+        >
+          Search
+        </button>
+      </form>
+
+      <!-- Results -->
+      {result.profiles.length === 0 ? (
+        <div class="text-center py-16">
+          <p class="text-muted mb-4">
+            {query ? `No results for "${query}"` : 'No profiles yet.'}
+          </p>
+          <a href="/submit" class="text-accent hover:text-accent-hover text-sm underline underline-offset-2">
+            Be the first to submit &rarr;
+          </a>
+        </div>
+      ) : (
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {result.profiles.map((profile) => {
+            const skills = skillsFromJson(profile.skills);
+            return (
+              <a
+                href={`/directory/${profile.domain}`}
+                class="block border border-border rounded-lg p-5 hover:border-accent/50 hover:shadow-sm transition-all"
+              >
+                <div class="flex items-start gap-3">
+                  {profile.avatar && (
+                    <img
+                      src={profile.avatar}
+                      alt={profile.name}
+                      class="w-10 h-10 rounded-full object-cover shrink-0"
+                      loading="lazy"
+                    />
+                  )}
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-baseline justify-between gap-2">
+                      <h2 class="font-medium truncate">{profile.name}</h2>
+                      <span class="text-xs text-muted shrink-0">{profile.domain}</span>
+                    </div>
+                    {profile.summary && (
+                      <p class="text-sm text-muted mt-1 line-clamp-2">{profile.summary}</p>
+                    )}
+                    {skills.length > 0 && (
+                      <div class="flex flex-wrap gap-1.5 mt-2">
+                        {skills.slice(0, 3).map((skill: string) => (
+                          <span class="text-xs px-2 py-0.5 bg-code-bg rounded-full text-muted">{skill}</span>
+                        ))}
+                        {skills.length > 3 && (
+                          <span class="text-xs px-2 py-0.5 text-muted">+{skills.length - 3}</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div class="text-xs text-muted mt-3 pt-2 border-t border-border/50">
+                  Added {formatDate(profile.submitted_at)}
+                  {profile.last_updated_at && ` · Updated ${formatDate(profile.last_updated_at)}`}
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      )}
+
+      <!-- Pagination -->
+      {result.totalPages > 1 && (
+        <div class="flex justify-center gap-2 mt-8">
+          {page > 1 && (
+            <a
+              href={`/directory?q=${query}&sort=${sort}&page=${page - 1}`}
+              class="px-3 py-1.5 border border-border rounded text-sm hover:bg-code-bg transition-colors"
+            >
+              &larr; Prev
+            </a>
+          )}
+          <span class="px-3 py-1.5 text-sm text-muted">
+            Page {page} of {result.totalPages}
+          </span>
+          {page < result.totalPages && (
+            <a
+              href={`/directory?q=${query}&sort=${sort}&page=${page + 1}`}
+              class="px-3 py-1.5 border border-border rounded text-sm hover:bg-code-bg transition-colors"
+            >
+              Next &rarr;
+            </a>
+          )}
+        </div>
+      )}
+    </div>
+  </main>
+
+  <footer class="border-t border-border py-8 mt-16">
+    <div class="container-narrow text-center text-sm text-muted">
+      <p>
+        <a href="https://github.com/metxt" class="hover:text-ink">GitHub</a>
+        <span class="mx-2">&middot;</span>
+        <span>Spec v0.1</span>
+        <span class="mx-2">&middot;</span>
+        <span>MIT License</span>
+      </p>
+    </div>
+  </footer>
+</Layout>

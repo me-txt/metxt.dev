@@ -1,0 +1,21 @@
+---
+const pathname = Astro.url.pathname;
+function isActive(path: string) {
+  if (path === '/') return pathname === '/';
+  return pathname.startsWith(path);
+}
+---
+
+<header class="border-b border-border">
+  <nav class="container-wide py-4 flex items-center justify-between">
+    <a href="/" class="font-mono text-xl font-medium">
+      <span class="text-[#F76B15]">/</span>me
+    </a>
+    <div class="flex items-center gap-6 text-sm">
+      <a href="/spec" class:list={[isActive('/spec') ? 'text-ink font-medium' : 'text-muted hover:text-ink']}>Spec</a>
+      <a href="/directory" class:list={[isActive('/directory') ? 'text-ink font-medium' : 'text-muted hover:text-ink']}>Directory</a>
+      <a href="/blog" class:list={[isActive('/blog') ? 'text-ink font-medium' : 'text-muted hover:text-ink']}>Blog</a>
+      <a href="https://github.com/metxt/metxt.dev" class="text-muted hover:text-ink">GitHub</a>
+    </div>
+  </nav>
+</header>

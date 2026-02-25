@@ -1,0 +1,182 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+
+const exampleMeTxt = `# Jamie Chen
+
+> Full-stack engineer building developer tools
+
+![Jamie Chen](https://jamiechen.dev/avatar.jpg)
+
+## Now
+
+- Building an open-source SDK generator
+- Contributing to the OpenAPI spec working group
+- Writing a CLI design guide
+
+## Skills
+
+- Developer experience
+- API design
+- CLI tooling
+
+## Stack
+
+- TypeScript, Go, Rust
+- Node.js, Deno
+- PostgreSQL, Redis
+
+## Links
+
+- [GitHub](https://github.com/jamiechen)
+- [Twitter](https://twitter.com/jamiechen)
+- [Website](https://jamiechen.dev)
+- [Email](mailto:hi@jamiechen.dev)
+
+## Preferences
+
+- Communication: Async-first (GitHub issues, email)
+- Timezone: US Pacific (UTC-8)
+- Response time: Within 24-48 hours
+- Meetings: Only when async won't work`;
+
+const specSections = [
+  { name: "Now", required: "Recommended", description: "Current projects, focus areas, what you're working on" },
+  { name: "Skills", required: "Recommended", description: "Core competencies and expertise areas" },
+  { name: "Stack", required: "Optional", description: "Technologies, tools, and languages you work with" },
+  { name: "Work", required: "Optional", description: "Notable projects, employment, or ventures" },
+  { name: "Writing", required: "Optional", description: "Blog posts, articles, publications" },
+  { name: "Talks", required: "Optional", description: "Presentations, podcasts, videos" },
+  { name: "Links", required: "Recommended", description: "GitHub, Twitter, website, email, etc." },
+  { name: "Preferences", required: "Recommended", description: "Communication style, timezone, availability" },
+  { name: "Optional", required: "Optional", description: "Secondary info, hobbies, personal details" },
+];
+---
+
+<Layout title="Specification — me.txt">
+  <Nav />
+
+  <main class="py-16">
+    <div class="container-narrow prose">
+      <h1 class="text-3xl font-serif font-medium tracking-tight mb-8">Specification</h1>
+      
+      <p class="text-lg text-muted mb-12">
+        me.txt is a UTF-8 encoded markdown file at your site's root that provides AI systems 
+        with structured context about who you are.
+      </p>
+      
+      <h2>Format</h2>
+      <p>
+        A me.txt file has a simple structure:
+      </p>
+      <ul>
+        <li>An <strong>H1</strong> with your name as the first element</li>
+        <li>An optional <strong>blockquote</strong> with a one-line summary of who you are</li>
+        <li>An optional <strong>markdown image</strong> for a profile photo: <code>![Name](url)</code></li>
+        <li>Freeform markdown content (optional intro/about paragraph)</li>
+        <li><strong>H2 sections</strong> organizing information by category</li>
+        <li>Content within sections can be lists, paragraphs, or link lists</li>
+      </ul>
+
+      <h2>Location</h2>
+      <p>
+        The file should be served at one of these locations (in order of preference):
+      </p>
+      <ol>
+        <li><code>https://yourdomain.com/me.txt</code></li>
+        <li><code>https://yourdomain.com/.well-known/me.txt</code></li>
+      </ol>
+      <p>
+        Serve with <code>Content-Type: text/plain; charset=utf-8</code> 
+        or <code>text/markdown; charset=utf-8</code>.
+      </p>
+
+      <h2>Sections</h2>
+      <p>
+        The following H2 sections are recognized by convention. You can use any sections 
+        that make sense for you, but these are recommended for interoperability:
+      </p>
+      
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>Section</th>
+            <th>Status</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {specSections.map(section => (
+            <tr>
+              <td><code>## {section.name}</code></td>
+              <td class="text-muted">{section.required}</td>
+              <td class="text-muted">{section.description}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h2>The Preferences Section</h2>
+      <p>
+        The <code>## Preferences</code> section tells AI systems (and humans) <em>how</em> to interact with you:
+      </p>
+      <ul>
+        <li><strong>Communication style:</strong> Async-first? Sync-preferred? Email? Slack?</li>
+        <li><strong>Timezone:</strong> When are you available?</li>
+        <li><strong>Response expectations:</strong> How quickly do you typically respond?</li>
+        <li><strong>Meeting preferences:</strong> Video on? Audio only? Written preferred?</li>
+        <li><strong>Collaboration style:</strong> Pairing? Solo work? Code review preferences?</li>
+      </ul>
+
+      <h2>Profile Photo</h2>
+      <p>
+        To include a profile picture, add a standard markdown image after the summary 
+        (before the first H2 section):
+      </p>
+      <pre><code class="language-markdown">![Your Name](https://example.com/avatar.jpg)</code></pre>
+      <p>
+        Tools that parse me.txt will extract this as the <code>avatar</code> field. 
+        When using <code>--github</code> with the CLI, your GitHub profile picture 
+        is automatically included.
+      </p>
+
+      <h2>Link List Format</h2>
+      <p>
+        For sections like Links, Work, or Writing, use markdown link lists:
+      </p>
+      <pre><code class="language-markdown">## Links
+
+- [GitHub](https://github.com/username): Open source projects
+- [Twitter](https://twitter.com/username): Tech thoughts and threads
+- [Blog](https://example.com/blog): Long-form writing</code></pre>
+      <p>
+        The text after the colon is an optional description that helps AI understand 
+        the context of each link.
+      </p>
+
+      <h2>Size Guidelines</h2>
+      <ul>
+        <li><strong>Target:</strong> Under 500 lines, under 2,000 tokens</li>
+        <li><strong>Ideal:</strong> 100-200 lines, 300-800 tokens</li>
+        <li>For more detail, link to a <code>me-full.txt</code> for extended information</li>
+      </ul>
+
+      <h2>Example</h2>
+      <div class="code-block not-prose">
+        <div class="code-block-header">
+          <span>me.txt</span>
+        </div>
+        <pre class="code-block-content text-xs leading-relaxed">{exampleMeTxt}</pre>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-border py-8 mt-16">
+    <div class="container-narrow text-center text-sm text-muted">
+      <p>
+        <a href="/" class="hover:text-ink">← Back to home</a>
+      </p>
+    </div>
+  </footer>
+</Layout>

@@ -1,0 +1,19 @@
+# Sam Park
+
+> Data scientist and ML engineer
+
+## Research
+
+- Transformer architectures for time-series forecasting
+- Reinforcement learning for robotics
+
+## Education
+
+- PhD Computer Science, Stanford
+- BS Mathematics, MIT
+
+## Skills
+
+- Python
+- PyTorch
+- Statistics

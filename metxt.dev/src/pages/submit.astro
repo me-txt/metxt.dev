@@ -1,0 +1,87 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+
+const error = Astro.url.searchParams.get('error');
+const success = Astro.url.searchParams.get('success');
+---
+
+<Layout title="Submit your me.txt — me.txt">
+  <Nav />
+
+  <main class="py-16">
+    <div class="container-narrow">
+      <h1 class="text-3xl font-serif font-medium tracking-tight mb-4">Submit your me.txt</h1>
+      <p class="text-muted mb-8">
+        Add yourself to the directory. We'll fetch and validate your me.txt file.
+      </p>
+
+      {success && (
+        <div class="border border-green-300 bg-green-50 rounded-lg p-4 mb-8">
+          <p class="text-green-800 font-medium">You're in!</p>
+          <p class="text-green-700 text-sm mt-1">
+            Your profile is live. <a href={`/directory/${success}`} class="underline font-medium">View your listing &rarr;</a>
+          </p>
+        </div>
+      )}
+
+      {error && (
+        <div class="border border-red-300 bg-red-50 rounded-lg p-4 mb-8">
+          <p class="text-red-800 text-sm">{error}</p>
+        </div>
+      )}
+
+      {!success && (
+        <form method="POST" action="/api/submit" id="submit-form" class="space-y-4">
+          <div>
+            <label for="url" class="block text-sm font-medium mb-2">Your me.txt URL</label>
+            <input
+              type="text"
+              id="url"
+              name="url"
+              placeholder="https://yoursite.com/me.txt"
+              required
+              class="w-full px-4 py-2.5 border border-border rounded-lg bg-paper text-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent placeholder:text-muted/50"
+            />
+            <p class="text-xs text-muted mt-2">
+              We'll try <code class="bg-code-bg px-1 rounded">/me.txt</code> and
+              <code class="bg-code-bg px-1 rounded">/.well-known/me.txt</code> at your domain.
+            </p>
+          </div>
+          <button
+            type="submit"
+            id="submit-btn"
+            class="inline-flex items-center justify-center px-5 py-2.5 bg-ink text-paper rounded-lg font-medium text-sm hover:bg-ink/90 transition-colors"
+          >
+            Submit
+          </button>
+        </form>
+      )}
+
+      <div class="mt-12 pt-8 border-t border-border">
+        <h2 class="text-lg font-serif font-medium mb-4">Don't have a me.txt yet?</h2>
+        <p class="text-muted text-sm mb-4">Generate one in seconds with the CLI:</p>
+        <div class="code-block text-left max-w-sm">
+          <div class="code-block-header">
+            <span>Terminal</span>
+          </div>
+          <pre class="code-block-content text-sm"><span class="text-muted">$</span> npx create-me-txt</pre>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('submit-form') as HTMLFormElement;
+    const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+    if (form && btn) {
+      form.addEventListener('submit', () => {
+        btn.textContent = 'Submitting...';
+        btn.disabled = true;
+        btn.classList.add('opacity-60');
+      });
+    }
+  </script>
+</Layout>

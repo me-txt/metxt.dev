@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
+  --font-serif: "Newsreader", "Times New Roman", ui-serif, Georgia, serif;
+  
+  --color-paper: #fafaf9;
+  --color-ink: #1c1917;
+  --color-muted: #78716c;
+  --color-border: #e7e5e4;
+  --color-accent: #b45309;
+  --color-accent-hover: #92400e;
+  --color-code-bg: #f5f5f4;
+}
+
+@layer base {
+  html {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  
+  body {
+    @apply bg-paper text-ink antialiased;
+    font-family: var(--font-sans);
+  }
+  
+  ::selection {
+    @apply bg-accent/20;
+  }
+}
+
+/* Research paper typography */
+.prose {
+  @apply text-ink leading-relaxed;
+  max-width: 65ch;
+}
+
+.prose h1 {
+  @apply text-3xl font-serif font-medium tracking-tight mb-2;
+}
+
+.prose h2 {
+  @apply text-xl font-serif font-medium tracking-tight mt-12 mb-4 text-ink;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.5rem;
+}
+
+.prose h3 {
+  @apply text-lg font-medium mt-8 mb-3;
+}
+
+.prose p {
+  @apply mb-4 text-base;
+}
+
+.prose a {
+  @apply text-accent hover:text-accent-hover underline underline-offset-2;
+}
+
+.prose ul, .prose ol {
+  @apply mb-4 pl-6;
+}
+
+.prose li {
+  @apply mb-1;
+}
+
+.prose ul li {
+  @apply list-disc;
+}
+
+.prose ol li {
+  @apply list-decimal;
+}
+
+.prose blockquote {
+  @apply border-l-2 border-accent pl-4 italic text-muted my-6;
+}
+
+.prose code:not(pre code) {
+  @apply bg-code-bg px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+.prose pre {
+  @apply bg-code-bg p-4 rounded-lg overflow-x-auto my-6 text-sm;
+}
+
+.prose pre code {
+  @apply bg-transparent p-0 text-sm font-mono;
+}
+
+/* Code block styling */
+.code-block {
+  @apply bg-code-bg border border-border rounded-lg overflow-hidden;
+}
+
+.code-block-header {
+  @apply bg-border/50 px-4 py-2 text-xs font-mono text-muted border-b border-border;
+}
+
+.code-block-content {
+  @apply p-4 overflow-x-auto text-sm font-mono leading-relaxed;
+}
+
+/* Spec table styling */
+.spec-table {
+  @apply w-full text-sm my-6;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.spec-table th {
+  @apply text-left font-medium pb-3 pr-6 border-b border-border;
+}
+
+.spec-table th:last-child {
+  @apply pr-0;
+}
+
+.spec-table td {
+  @apply py-3 pr-6 border-b border-border/50;
+}
+
+.spec-table td:first-child {
+  @apply whitespace-nowrap;
+}
+
+.spec-table td:last-child {
+  @apply pr-0;
+}
+
+.spec-table tr:last-child td {
+  @apply border-b-0;
+}
+
+/* Utility */
+.container-narrow {
+  @apply max-w-2xl mx-auto px-6;
+}
+
+.container-wide {
+  @apply max-w-4xl mx-auto px-6;
+}

@@ -1,0 +1,18 @@
+# build output
+dist/
+
+# test coverage
+coverage/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+
+# editors
+.idea/

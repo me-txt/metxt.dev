@@ -1,0 +1,46 @@
+---
+import Layout from './Layout.astro';
+import Nav from '../components/Nav.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: string;
+}
+
+const { title, description, date } = Astro.props;
+const formattedDate = new Date(date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+---
+
+<Layout title={`${title} — me.txt`} description={description}>
+  <Nav />
+
+  <main class="py-16">
+    <article class="container-narrow">
+      <header class="mb-12">
+        <p class="text-sm text-muted mb-2">{formattedDate}</p>
+        <h1 class="text-3xl md:text-4xl font-serif font-medium tracking-tight mb-4">
+          {title}
+        </h1>
+        <p class="text-lg text-muted">{description}</p>
+      </header>
+      
+      <div class="prose">
+        <slot />
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-border py-8 mt-16">
+    <div class="container-narrow text-center text-sm text-muted">
+      <p class="mb-2">
+        <a href="/blog" class="hover:text-ink">← Back to blog</a>
+      </p>
+    </div>
+  </footer>
+</Layout>

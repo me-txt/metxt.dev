@@ -1,0 +1,34 @@
+# [Your Name]
+
+> Creator of me.txt, an open standard for personal LLM-friendly identity files
+
+## Now
+
+- Building the me.txt ecosystem (spec, CLI, directory)
+- Advocating for human-authored AI context
+- Exploring standards for the LLM age
+
+## Skills
+
+- Developer experience
+- Open standards
+- Technical writing
+- TypeScript
+
+## Work
+
+- [me.txt](https://metxt.dev): llms.txt, but for people
+- [create-me-txt](https://npmjs.com/package/create-me-txt): CLI tool to generate and validate me.txt files
+
+## Links
+
+- [GitHub](https://github.com/metxt)
+- [Twitter](https://twitter.com/metxt)
+- [Website](https://metxt.dev)
+
+## Preferences
+
+- Communication: Async-first (GitHub issues preferred)
+- Timezone: [Your timezone]
+- Open to: Collaborations on AI/LLM tooling, spec contributions
+- Not interested in: Vendor pitches, generic outreach

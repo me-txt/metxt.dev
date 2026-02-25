@@ -1,0 +1,52 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+
+const posts = [
+  {
+    title: "Introducing me.txt",
+    description: "An open standard for personal identity files in the AI age",
+    date: "2026-02-24",
+    slug: "introducing-me-txt"
+  }
+];
+---
+
+<Layout title="Blog — me.txt">
+  <Nav />
+
+  <main class="py-16">
+    <div class="container-narrow">
+      <h1 class="text-3xl font-serif font-medium tracking-tight mb-12">Blog</h1>
+      
+      <div class="space-y-8">
+        {posts.map(post => (
+          <article class="group">
+            <a href={`/blog/${post.slug}`} class="block">
+              <p class="text-sm text-muted mb-1">
+                {new Date(post.date).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </p>
+              <h2 class="text-xl font-medium mb-2 group-hover:text-accent transition-colors">
+                {post.title}
+              </h2>
+              <p class="text-muted">{post.description}</p>
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-border py-8 mt-16">
+    <div class="container-narrow text-center text-sm text-muted">
+      <p>
+        <a href="/" class="hover:text-ink">← Back to home</a>
+      </p>
+    </div>
+  </footer>
+</Layout>

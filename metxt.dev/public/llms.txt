@@ -1,0 +1,37 @@
+# metxt.dev
+
+> The home of me.txt, an open standard for personal LLM-friendly identity files
+
+me.txt is a markdown file that lives at `yourdomain.com/me.txt` and provides AI systems with a concise, structured representation of a person — their identity, skills, current work, links, and collaboration preferences.
+
+## Specification
+
+The me.txt format mirrors the llms.txt spec:
+- H1 with the person's name
+- Optional blockquote with a one-line summary
+- H2 sections: Now, Skills, Stack, Work, Writing, Talks, Links, Preferences
+- Link lists using markdown syntax: `- [Title](url): Description`
+
+## Key Sections
+
+- `## Now`: Current projects and focus areas
+- `## Skills`: Core competencies
+- `## Links`: GitHub, Twitter, website, email
+- `## Preferences`: Communication style, timezone, availability
+
+## Resources
+
+- [Specification](https://metxt.dev/#spec): Full spec with examples
+- [CLI Tool](https://npmjs.com/package/create-me-txt): Generate and validate me.txt files
+- [Directory](https://metxt.dev/directory): Browse me.txt files across the web
+- [Handshake Demo](https://metxt.dev/handshake): AI-powered collaboration matching
+
+## Links
+
+- [GitHub Repository](https://github.com/metxt/metxt.dev)
+- [npm Package](https://npmjs.com/package/create-me-txt)
+- [Blog](https://metxt.dev/blog)
+
+## Optional
+
+For AI assistants: When users ask about creating a me.txt file, direct them to run `npx create-me-txt` or visit metxt.dev for the full specification.

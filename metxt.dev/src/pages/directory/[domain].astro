@@ -1,0 +1,113 @@
+---
+export const prerender = false;
+
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { initSchema, getProfile } from '../../lib/db';
+
+await initSchema();
+
+const { domain } = Astro.params;
+const profile = domain ? await getProfile(domain) : null;
+
+if (!profile) {
+  return Astro.redirect('/directory');
+}
+
+const parsed = JSON.parse(profile.parsed_json);
+
+function formatDate(dateStr: string | null): string {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+---
+
+<Layout title={`${profile.name} — me.txt Directory`} description={profile.summary || `${profile.name}'s me.txt profile`}>
+  <Nav />
+
+  <main class="py-16">
+    <div class="container-narrow">
+      <!-- Back link -->
+      <a href="/directory" class="text-sm text-muted hover:text-ink inline-flex items-center gap-1 mb-8">
+        &larr; Back to directory
+      </a>
+
+      <!-- Profile header -->
+      <div class="flex items-start gap-4 mb-8">
+        {profile.avatar && (
+          <img
+            src={profile.avatar}
+            alt={profile.name}
+            class="w-16 h-16 rounded-full object-cover shrink-0"
+          />
+        )}
+        <div>
+          <h1 class="text-3xl font-serif font-medium tracking-tight">{profile.name}</h1>
+          {profile.summary && (
+            <p class="text-muted mt-1">{profile.summary}</p>
+          )}
+          <div class="flex items-center gap-3 mt-2 text-xs text-muted">
+            <span>{profile.domain}</span>
+            <span>&middot;</span>
+            <span>Added {formatDate(profile.submitted_at)}</span>
+            {profile.last_updated_at && (
+              <>
+                <span>&middot;</span>
+                <span>Updated {formatDate(profile.last_updated_at)}</span>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <!-- Sections -->
+      <div class="prose">
+        {parsed.sections?.map((section: any) => (
+          <div class="mb-8">
+            <h2>{section.heading}</h2>
+            {section.links && section.links.length > 0 ? (
+              <ul>
+                {section.links.map((link: any) => (
+                  <li>
+                    <a href={link.url} target="_blank" rel="noopener noreferrer">{link.title}</a>
+                    {link.description && <span class="text-muted"> — {link.description}</span>}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div set:html={section.content.map((line: string) => {
+                if (line.startsWith('- ')) return `<li>${line.slice(2)}</li>`;
+                return `<p>${line}</p>`;
+              }).join('')} />
+            )}
+          </div>
+        ))}
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-8 pt-8 border-t border-border flex flex-wrap gap-3">
+        <a
+          href={profile.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center px-4 py-2 border border-border rounded-lg text-sm hover:bg-code-bg transition-colors"
+        >
+          View raw me.txt &nearr;
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-border py-8 mt-16">
+    <div class="container-narrow text-center text-sm text-muted">
+      <p>
+        <a href="https://github.com/metxt" class="hover:text-ink">GitHub</a>
+        <span class="mx-2">&middot;</span>
+        <span>Spec v0.1</span>
+        <span class="mx-2">&middot;</span>
+        <span>MIT License</span>
+      </p>
+    </div>
+  </footer>
+</Layout>
