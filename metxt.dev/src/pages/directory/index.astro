@@ -83,7 +83,7 @@ function skillsFromJson(json: string | null): string[] {
                 href={`/directory/${profile.domain}`}
                 class="block border border-border rounded-lg p-5 hover:border-accent/50 hover:shadow-sm transition-all"
               >
-                <div class="flex items-start gap-3">
+                <div class="flex items-center gap-3 mb-3">
                   {profile.avatar && (
                     <img
                       src={profile.avatar}
@@ -92,27 +92,25 @@ function skillsFromJson(json: string | null): string[] {
                       loading="lazy"
                     />
                   )}
-                  <div class="min-w-0 flex-1">
-                    <div class="flex items-baseline justify-between gap-2">
-                      <h2 class="font-medium truncate">{profile.name}</h2>
-                      <span class="text-xs text-muted shrink-0">{profile.domain}</span>
-                    </div>
-                    {profile.summary && (
-                      <p class="text-sm text-muted mt-1 line-clamp-2">{profile.summary}</p>
-                    )}
-                    {skills.length > 0 && (
-                      <div class="flex flex-wrap gap-1.5 mt-2">
-                        {skills.slice(0, 3).map((skill: string) => (
-                          <span class="text-xs px-2 py-0.5 bg-code-bg rounded-full text-muted">{skill}</span>
-                        ))}
-                        {skills.length > 3 && (
-                          <span class="text-xs px-2 py-0.5 text-muted">+{skills.length - 3}</span>
-                        )}
-                      </div>
-                    )}
+                  <div class="min-w-0">
+                    <h2 class="font-medium truncate">{profile.name}</h2>
+                    <span class="text-xs text-muted">{profile.domain}</span>
                   </div>
                 </div>
-                <div class="text-xs text-muted mt-3 pt-2 border-t border-border/50">
+                {profile.summary && (
+                  <p class="text-sm text-muted line-clamp-2">{profile.summary}</p>
+                )}
+                {skills.length > 0 && (
+                  <div class="flex flex-wrap gap-1.5 mt-3">
+                    {skills.slice(0, 3).map((skill: string) => (
+                      <span class="text-xs px-2 py-0.5 bg-code-bg rounded-full text-muted">{skill}</span>
+                    ))}
+                    {skills.length > 3 && (
+                      <span class="text-xs px-2 py-0.5 text-muted">+{skills.length - 3}</span>
+                    )}
+                  </div>
+                )}
+                <div class="text-xs text-muted mt-3 pt-3 border-t border-border/50">
                   Added {formatDate(profile.submitted_at)}
                   {profile.last_updated_at && ` · Updated ${formatDate(profile.last_updated_at)}`}
                 </div>
