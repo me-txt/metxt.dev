@@ -62,24 +62,34 @@ function formatDate(dateStr: string | null): string {
       </div>
 
       <!-- Sections -->
-      <div class="prose">
+      <div class="profile-sections">
         {parsed.sections?.map((section: any) => (
-          <div class="mb-8">
-            <h2>{section.heading}</h2>
+          <div class="mb-10">
+            <h2 class="text-lg font-serif font-medium tracking-tight mb-4 pb-2 border-b border-border">{section.heading}</h2>
             {section.links && section.links.length > 0 ? (
-              <ul>
+              <ul class="space-y-1.5">
                 {section.links.map((link: any) => (
-                  <li>
-                    <a href={link.url} target="_blank" rel="noopener noreferrer">{link.title}</a>
-                    {link.description && <span class="text-muted"> — {link.description}</span>}
+                  <li class="flex items-baseline gap-1.5">
+                    <span class="text-muted shrink-0">&bull;</span>
+                    <span>
+                      <a href={link.url} target="_blank" rel="noopener noreferrer" class="text-accent hover:text-accent-hover underline underline-offset-2">{link.title}</a>
+                      {link.description && <span class="text-muted"> — {link.description}</span>}
+                    </span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <div set:html={section.content.map((line: string) => {
-                if (line.startsWith('- ')) return `<li>${line.slice(2)}</li>`;
-                return `<p>${line}</p>`;
-              }).join('')} />
+              <ul class="space-y-1.5">
+                {section.content.map((line: string) => {
+                  const text = line.startsWith('- ') ? line.slice(2) : line;
+                  return (
+                    <li class="flex items-baseline gap-1.5">
+                      <span class="text-muted shrink-0">&bull;</span>
+                      <span set:html={text} />
+                    </li>
+                  );
+                })}
+              </ul>
             )}
           </div>
         ))}
