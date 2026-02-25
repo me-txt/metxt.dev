@@ -8,6 +8,10 @@ CLI tool to generate, validate, and fetch [me.txt](https://metxt.dev) files — 
 npx create-me-txt
 ```
 
+**Not a developer?** Tell your AI agent:
+
+> Create a me.txt file for me following the spec at metxt.dev/spec. Place it at my site root (/me.txt). Keep it concise.
+
 ## Installation
 
 ```bash

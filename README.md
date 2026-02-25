@@ -25,6 +25,12 @@ Or with GitHub pre-fill:
 npx create-me-txt --github yourusername
 ```
 
+### Using an AI agent?
+
+Paste this prompt into Cursor, Copilot, Claude, ChatGPT, or any coding agent:
+
+> Create a me.txt file for me following the spec at metxt.dev/spec. It should be a markdown file placed at my site root (/me.txt). Include my name, a one-line summary, and sections for Now, Skills, Links, and Preferences. Keep it concise.
+
 ## The format
 
 Place a `me.txt` file at your site root (`yoursite.com/me.txt`) or at `/.well-known/me.txt`:
