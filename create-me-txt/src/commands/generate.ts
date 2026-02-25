@@ -8,11 +8,48 @@ import { makeSection } from '../lib/renderer.js'
 import { parse } from '../lib/parser.js'
 import { fetchGitHubProfile, extractLanguages, formatRepoAsWork } from '../lib/github.js'
 
+function cancelled(): never {
+  p.cancel('Operation cancelled.')
+  process.exit(0)
+}
+
+async function ask(message: string, placeholder?: string, initialValue?: string): Promise<string> {
+  const result = await p.text({ message, placeholder, initialValue })
+  if (p.isCancel(result)) cancelled()
+  return (result as string) || ''
+}
+
+async function askList(label: string, placeholder: string, prefill: string[] = []): Promise<string[]> {
+  const items = [...prefill]
+
+  if (items.length > 0) {
+    p.note(items.join('\n'), `Pre-filled ${label.toLowerCase()}`)
+    const keep = await p.confirm({ message: `Keep these ${label.toLowerCase()}?`, initialValue: true })
+    if (p.isCancel(keep)) cancelled()
+    if (!keep) items.length = 0
+  }
+
+  let adding = true
+  while (adding) {
+    const item = await ask(
+      items.length === 0 ? `Add a ${label.toLowerCase()}` : `Add another ${label.toLowerCase()} (enter to finish)`,
+      placeholder
+    )
+    if (!item.trim()) {
+      adding = false
+    } else {
+      items.push(item.trim())
+    }
+  }
+
+  return items
+}
+
 export async function generate(options: GenerateOptions): Promise<void> {
   p.intro(pc.cyan('create-me-txt'))
 
-  let name = ''
-  let summary = ''
+  let prefillName = ''
+  let prefillSummary = ''
   let prefillAvatar = ''
   let prefillSkills: string[] = []
   let prefillWork: string[] = []
@@ -26,233 +63,110 @@ export async function generate(options: GenerateOptions): Promise<void> {
       const profile = await fetchGitHubProfile(options.github)
       spinner.stop('GitHub profile loaded!')
 
-      name = profile.name
-      summary = profile.bio
+      prefillName = profile.name
+      prefillSummary = profile.bio
       if (profile.avatar) prefillAvatar = profile.avatar
-
       if (profile.repos.length > 0) {
         prefillSkills = extractLanguages(profile.repos)
         prefillWork = profile.repos.map(formatRepoAsWork)
       }
-
-      if (profile.blog) {
-        prefillLinks.push(`- [Website](${profile.blog})`)
-      }
+      if (profile.blog) prefillLinks.push(`- [Website](${profile.blog})`)
       prefillLinks.push(`- [GitHub](https://github.com/${options.github})`)
-      if (profile.twitter) {
-        prefillLinks.push(`- [Twitter](https://twitter.com/${profile.twitter})`)
-      }
+      if (profile.twitter) prefillLinks.push(`- [Twitter](https://twitter.com/${profile.twitter})`)
     } catch (error) {
       spinner.stop(pc.red(`Failed to fetch GitHub profile: ${(error as Error).message}`))
     }
   }
 
+  // Non-interactive mode
   if (options.yes) {
-    if (!name) name = 'Your Name'
-    if (!summary) summary = 'A short summary about yourself'
-
+    const name = prefillName || 'Your Name'
+    const summary = prefillSummary || 'A short summary about yourself'
     const sections: MeTxtSection[] = []
-
-    if (prefillSkills.length > 0) {
-      sections.push(makeSection('Skills', prefillSkills.map(s => `- ${s}`)))
-    }
-    if (prefillWork.length > 0) {
-      sections.push(makeSection('Work', prefillWork))
-    }
-    if (prefillLinks.length > 0) {
-      sections.push(makeSection('Links', prefillLinks))
-    }
-
-    const avatar = prefillAvatar || undefined
-    const content = render({ name, summary, avatar, sections })
-
-    if (options.json) {
-      const parsed = parse(content)
-      console.log(JSON.stringify(parsed, null, 2))
-      return
-    }
-
+    if (prefillSkills.length > 0) sections.push(makeSection('Skills', prefillSkills.map(s => `- ${s}`)))
+    if (prefillWork.length > 0) sections.push(makeSection('Work', prefillWork))
+    if (prefillLinks.length > 0) sections.push(makeSection('Links', prefillLinks))
+    const content = render({ name, summary, avatar: prefillAvatar || undefined, sections })
+    if (options.json) { console.log(JSON.stringify(parse(content), null, 2)); return }
     const outputPath = options.output || 'me.txt'
-    const fullPath = resolve(process.cwd(), outputPath)
-    writeFileSync(fullPath, content)
-    p.outro(pc.green(`✓ Saved to ${fullPath}`))
+    writeFileSync(resolve(process.cwd(), outputPath), content)
+    p.outro(pc.green(`✓ Saved to ${resolve(process.cwd(), outputPath)}`))
     return
   }
 
-  const corePrompts = {
-    name: () =>
-      p.text({
-        message: 'What is your name?',
-        placeholder: 'Jane Doe',
-        initialValue: name,
-        validate: (value) => {
-          if (!value.trim()) return 'Name is required'
-        }
-      }),
+  // --- Interactive mode ---
 
-    summary: () =>
-      p.text({
-        message: 'Write a one-line summary about yourself.',
-        placeholder: 'Full-stack developer building tools for developers.',
-        initialValue: summary,
-        validate: (value) => {
-          if (!value.trim()) return 'Summary is required'
-        }
-      }),
+  // Basics
+  const name = await ask('What is your name?', 'Jane Doe', prefillName)
+  if (!name.trim()) { p.cancel('Name is required.'); process.exit(1) }
 
-    avatar: () =>
-      p.text({
-        message: 'Profile picture URL (optional, press enter to skip)',
-        placeholder: 'https://example.com/avatar.jpg',
-        initialValue: prefillAvatar
-      }),
+  const summary = await ask('One-line summary — who are you, what do you do?', 'Product designer building tools for creators', prefillSummary)
+  if (!summary.trim()) { p.cancel('Summary is required.'); process.exit(1) }
 
-    now: () =>
-      p.text({
-        message: 'What are you currently working on? (Now section)',
-        placeholder: 'Building a new project, learning Rust, etc.'
-      }),
+  const avatar = await ask('Profile picture URL (press enter to skip)', 'https://example.com/photo.jpg', prefillAvatar)
 
-    skills: () =>
-      p.text({
-        message: 'List your skills (comma-separated)',
-        placeholder: 'TypeScript, React, Node.js, PostgreSQL',
-        initialValue: prefillSkills.join(', ')
-      }),
+  // Now
+  const nowItems = await askList('Now item', 'Learning Rust, Building a side project, etc.')
 
-    stack: () =>
-      p.text({
-        message: 'What is your preferred tech stack? (comma-separated)',
-        placeholder: 'TypeScript, Next.js, Tailwind, Prisma'
-      }),
+  // Skills
+  const skillsInput = await ask('Your skills (comma-separated)', 'Design, TypeScript, React', prefillSkills.join(', '))
 
-    work: () =>
-      p.text({
-        message: 'List notable work/projects (one per line, use - prefix)',
-        placeholder: '- Project Name - Description',
-        initialValue: prefillWork.join('\n')
-      }),
+  // Stack
+  const stackInput = await ask('Your tech stack (comma-separated, enter to skip)', 'Figma, VS Code, Next.js')
 
-    links: () =>
-      p.text({
-        message: 'Add your links (one per line, use markdown format)',
-        placeholder: '- [GitHub](https://github.com/username)',
-        initialValue: prefillLinks.join('\n')
-      }),
+  // Work
+  const workItems = await askList('Work item', '- [Project](https://url) — description', prefillWork)
 
-    timezone: () =>
-      p.text({
-        message: 'What is your timezone?',
-        placeholder: 'EST / UTC-5'
-      }),
+  // Links
+  const linkItems = await askList('Link', '- [GitHub](https://github.com/you)', prefillLinks)
 
-    contactPref: () =>
-      p.text({
-        message: 'How do you prefer to be contacted?',
-        placeholder: 'Email for serious inquiries, DM for quick questions'
-      }),
+  // Preferences
+  p.log.step(pc.dim('Preferences — how people should work with you'))
+  const timezone = await ask('Timezone (enter to skip)', 'US Eastern (UTC-5)')
+  const contact = await ask('Preferred contact method (enter to skip)', 'Email for serious inquiries, DM for quick questions')
+  const responseTime = await ask('Typical response time (enter to skip)', '24-48 hours')
 
-    responseTime: () =>
-      p.text({
-        message: 'What is your typical response time?',
-        placeholder: '24-48 hours'
-      })
+  // Full mode extras
+  let writingItems: string[] = []
+  let talkItems: string[] = []
+  let optionalText = ''
+
+  if (options.full) {
+    writingItems = await askList('Writing/publication', '- [Blog Post](https://example.com/post)')
+    talkItems = await askList('Talk/presentation', '- [Talk Title](https://youtube.com/...)')
+    optionalText = await ask('Anything else? Hobbies, interests, etc. (enter to skip)', 'Coffee, gaming, hiking')
   }
 
-  const fullPrompts = options.full
-    ? {
-      ...corePrompts,
-      writing: () =>
-        p.text({
-          message: 'List your writing/publications (one per line, use markdown format)',
-          placeholder: '- [Blog Post Title](https://example.com/post)'
-        }),
-
-      talks: () =>
-        p.text({
-          message: 'List your talks/presentations (one per line, use markdown format)',
-          placeholder: '- [Talk Title](https://youtube.com/...)'
-        }),
-
-      optional: () =>
-        p.text({
-          message: 'Anything else? Hobbies, personal details, etc.',
-          placeholder: 'Coffee enthusiast, dog person, amateur photographer'
-        })
-    }
-    : corePrompts
-
-  const answers = await p.group(fullPrompts, {
-    onCancel: () => {
-      p.cancel('Operation cancelled.')
-      process.exit(0)
-    }
-  })
-
+  // Build sections
   const sections: MeTxtSection[] = []
 
-  if (answers.now) {
-    sections.push(makeSection('Now', [answers.now]))
-  }
-  if (answers.skills) {
-    sections.push(makeSection('Skills', answers.skills.split(',').map((s: string) => `- ${s.trim()}`)))
-  }
-  if (answers.stack) {
-    sections.push(makeSection('Stack', answers.stack.split(',').map((s: string) => `- ${s.trim()}`)))
-  }
-  if (answers.work) {
-    sections.push(makeSection('Work', answers.work.split('\n').filter((l: string) => l.trim())))
-  }
-  if ('writing' in answers && answers.writing) {
-    sections.push(makeSection('Writing', (answers.writing as string).split('\n').filter((l: string) => l.trim())))
-  }
-  if ('talks' in answers && answers.talks) {
-    sections.push(makeSection('Talks', (answers.talks as string).split('\n').filter((l: string) => l.trim())))
-  }
-  if (answers.links) {
-    sections.push(makeSection('Links', answers.links.split('\n').filter((l: string) => l.trim())))
-  }
+  if (nowItems.length > 0) sections.push(makeSection('Now', nowItems.map(i => i.startsWith('- ') ? i : `- ${i}`)))
+  if (skillsInput) sections.push(makeSection('Skills', skillsInput.split(',').map(s => `- ${s.trim()}`)))
+  if (stackInput) sections.push(makeSection('Stack', stackInput.split(',').map(s => `- ${s.trim()}`)))
+  if (workItems.length > 0) sections.push(makeSection('Work', workItems))
+  if (writingItems.length > 0) sections.push(makeSection('Writing', writingItems))
+  if (talkItems.length > 0) sections.push(makeSection('Talks', talkItems))
+  if (linkItems.length > 0) sections.push(makeSection('Links', linkItems))
 
   const preferences: string[] = []
-  if (answers.timezone) preferences.push(`- Timezone: ${answers.timezone}`)
-  if (answers.contactPref) preferences.push(`- Contact: ${answers.contactPref}`)
-  if (answers.responseTime) preferences.push(`- Response time: ${answers.responseTime}`)
-  if (preferences.length > 0) {
-    sections.push(makeSection('Preferences', preferences))
-  }
+  if (timezone) preferences.push(`- Timezone: ${timezone}`)
+  if (contact) preferences.push(`- Contact: ${contact}`)
+  if (responseTime) preferences.push(`- Response time: ${responseTime}`)
+  if (preferences.length > 0) sections.push(makeSection('Preferences', preferences))
 
-  if ('optional' in answers && answers.optional) {
-    sections.push(makeSection('Optional', [(answers.optional as string)]))
-  }
+  if (optionalText) sections.push(makeSection('Optional', [optionalText]))
 
-  const content = render({
-    name: answers.name,
-    summary: answers.summary,
-    avatar: answers.avatar || undefined,
-    sections
-  })
+  const content = render({ name, summary, avatar: avatar || undefined, sections })
 
-  if (options.json) {
-    const parsed = parse(content)
-    console.log(JSON.stringify(parsed, null, 2))
-    return
-  }
+  if (options.json) { console.log(JSON.stringify(parse(content), null, 2)); return }
 
   p.note(content, 'Preview')
 
   const outputPath = options.output || 'me.txt'
-  const shouldSave = await p.confirm({
-    message: `Save to ${outputPath}?`,
-    initialValue: true
-  })
-
-  if (p.isCancel(shouldSave) || !shouldSave) {
-    p.cancel('File not saved.')
-    return
-  }
+  const shouldSave = await p.confirm({ message: `Save to ${outputPath}?`, initialValue: true })
+  if (p.isCancel(shouldSave) || !shouldSave) { p.cancel('File not saved.'); return }
 
   const fullPath = resolve(process.cwd(), outputPath)
   writeFileSync(fullPath, content)
-
   p.outro(pc.green(`✓ Saved to ${fullPath}`))
 }
